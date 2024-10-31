@@ -1,0 +1,59 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Node",
+"class": "State",
+"language": "GDScript",
+"path": "res://classes/statemachine/state.gd"
+}, {
+"base": "Node",
+"class": "StateMachine",
+"language": "GDScript",
+"path": "res://classes/statemachine/statemachine.gd"
+} ]
+_global_script_class_icons={
+"State": "",
+"StateMachine": ""
+}
+
+[application]
+
+config/name="Godopet"
+run/main_scene="res://main.tscn"
+boot_splash/show_image=false
+boot_splash/bg_color=Color( 0, 0, 0, 0 )
+config/icon="res://icon.png"
+
+[display]
+
+window/size/width=64
+window/size/height=64
+window/size/resizable=false
+window/size/borderless=true
+window/size/always_on_top=true
+window/per_pixel_transparency/allowed=true
+window/per_pixel_transparency/enabled=true
+
+[gui]
+
+common/drop_mouse_on_gui_input_disabled=true
+
+[physics]
+
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+quality/driver/driver_name="GLES2"
+vram_compression/import_etc=true
+vram_compression/import_etc2=false
+viewport/transparent_background=true
+environment/default_environment="res://default_env.tres"
