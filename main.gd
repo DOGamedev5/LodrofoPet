@@ -26,20 +26,17 @@ func _input(event):
 			else:
 				is_grabbed = false
 	
-	if event is InputEventMouse:
-		print(event.position)
-	
 	if event is InputEventMouse and is_grabbed:
 		
 		OS.window_position = OS.window_position+(event.position-(OS.window_size/2)) 
 		window_position_delta = OS.window_position
 
 func move(delta):
-	if window_position_delta.x < 0 and direction.x < 0:
+	if window_position_delta.x <= 0 and direction.x < 0:
 		window_position_delta.x = 0
 		direction.x = 1
 	
-	if window_position_delta.x > OS.get_screen_size().x - (OS.window_size.x) and direction.x > 0:
+	if window_position_delta.x >= OS.get_screen_size().x - (OS.window_size.x) and direction.x > 0:
 		window_position_delta.x = OS.get_screen_size().x - (OS.window_size.x)
 		direction.x = -1
 	
@@ -66,7 +63,3 @@ func gravity(delta):
 
 func onFloor():
 	return OS.window_position.y < OS.get_screen_size().y - (OS.window_size.y)
-
-
-func _on_Timer2_timeout():
-	pass

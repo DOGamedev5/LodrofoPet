@@ -6,7 +6,6 @@ func enter(_ls):
 
 func _physics_process(_delta):
 	
-	
 	pass
 
 func process_state():
