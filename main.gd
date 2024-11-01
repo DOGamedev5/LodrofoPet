@@ -1,13 +1,24 @@
 extends Node2D
 
-var direction := Vector2.ZERO
-export var velocity := 120
+export var max_speed := 120
+export var acceleration := 50
 export var have_gravity := true
-export var gravity_force := 400
+export var gravity_force := 200
+export var jump_force := -400
+export var friction_force := 3.8
+export var bounce := 0.5
+
+var motion := Vector2.ZERO
+var direction := Vector2.ZERO
 var window_position_delta := Vector2.ZERO
 var is_grabbed := false
 
+var last_positions := []
+var velocity := Vector2.ZERO
+
+
 func _ready():
+	
 	window_position_delta = OS.window_position
 	randomize()
 	$StateMachine.init(self)
@@ -15,7 +26,11 @@ func _ready():
 func _physics_process(delta):
 	$StateMachine.processMachine(delta)
 	if not is_grabbed:
+		moveMotion(delta)
 		move(delta)
+		if OS.window_position.y < 0:
+			motion.y = 0
+	
 	
 func _input(event):
 	if event is InputEventMouseButton:
@@ -35,12 +50,14 @@ func move(delta):
 	if window_position_delta.x <= 0 and direction.x < 0:
 		window_position_delta.x = 0
 		direction.x = 1
+		motion.x *= -1
 	
 	if window_position_delta.x >= OS.get_screen_size().x - (OS.window_size.x) and direction.x > 0:
 		window_position_delta.x = OS.get_screen_size().x - (OS.window_size.x)
 		direction.x = -1
+		motion.x *= -1
 	
-	var movement : Vector2 = direction * delta * velocity
+	var movement : Vector2 = motion * delta
 	
 	window_position_delta += movement
 	
@@ -52,14 +69,40 @@ func move(delta):
 	
 	OS.window_position = window_position_delta
 
+func moveMotion(delta):
+	
+	if direction.x > 0 and motion.x < max_speed:
+		motion.x += acceleration * delta
+		if motion.x > max_speed:
+			motion.x = max_speed
+			
+	if direction.x < 0 and motion.x > -max_speed:
+		motion.x -= acceleration * delta
+		if motion.x < -max_speed:
+			motion.x = -max_speed
+	
+	if not direction.x and onFloor():
+		var lastDirection := sign(motion.x)
+		motion.x -= friction_force * motion.x * delta
+		if lastDirection != sign(motion.x):
+			motion.x = 0
 
 
 func gravity(delta):
-	if not onFloor(): return
+	if onFloor():
+		if motion.y > 0:
+			motion.y = 0
+		return
 	
 	var movement : Vector2 = Vector2.DOWN * gravity_force * delta
 	
-	window_position_delta += movement
+	motion += movement
 
 func onFloor():
-	return OS.window_position.y < OS.get_screen_size().y - (OS.window_size.y)
+	return OS.window_position.y >= OS.get_screen_size().y - (OS.window_size.y)
+
+func _on_Timer_timeout():
+	last_positions.append(OS.window_position)
+	if last_positions.size() > 2:
+		last_positions.pop_front()
+		velocity = last_positions[1] - last_positions[0]
