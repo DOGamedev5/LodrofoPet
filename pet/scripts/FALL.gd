@@ -2,7 +2,7 @@ extends State
 
 
 func enter(_ls):
-	parent.modulate = Color(0.3, 0.6, 0.9)
+
 	pass
 
 func process_physics(_delta):

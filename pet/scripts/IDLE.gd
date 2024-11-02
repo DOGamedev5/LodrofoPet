@@ -2,10 +2,9 @@ extends State
 
 onready var time := $Timer
 
-var nextState := ["WALK", "JUMP", "WALK", "WALK", "WALK"]
+var nextState := ["WALK", "JUMP", "WALK", "WALK", "JUMP"]
 
 func enter(_ls):
-	parent.modulate = Color(1, 0.3, 0.6)
 	parent.direction.x = 0
 	time.wait_time = rand_range(2, 5)
 	time.start()
