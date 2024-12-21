@@ -12,6 +12,7 @@
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 2 )
 acceleration = 100
+jump_force = -300
 
 [node name="Icon" type="Sprite" parent="."]
 position = Vector2( 32, 32 )

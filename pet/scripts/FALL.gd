@@ -1,10 +1,7 @@
 extends State
 
-
 func enter(_ls):
 	parent.onFloor = false
-
-	pass
 	
 func process_state():
 	if parent.onFloor():

@@ -64,13 +64,12 @@ func _physics_process(delta):
 		move(delta)
 		if OS.window_position.y < 0:
 			motion.y = 0
-		
+
 		if canFlipH and motion.x:
 			sprite.flip_h = motion.x < 0
 		
 		if canFlipH and motion.y:
 			sprite.flip_y = motion.y < 0
-	
 	
 func _input(event):
 	if event is InputEventMouseButton:
