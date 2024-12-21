@@ -2,8 +2,7 @@ extends State
 
 
 func enter(_ls):
-
-	pass
+	$"../../AnimationPlayer".play("fall")
 
 func process_physics(_delta):
 	if OS.window_position.x < 0:
