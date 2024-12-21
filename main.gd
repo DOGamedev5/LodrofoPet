@@ -1,5 +1,7 @@
 extends Node2D
 
+onready var sprite := $Icon
+
 export var max_speed := 120
 export var acceleration := 50
 export var have_gravity := true
@@ -7,6 +9,8 @@ export var gravity_force := 200
 export var jump_force := -400
 export var friction_force := 3.8
 export var bounce := 0.5
+export var canFlipH := false
+export var canFlipV := false
 
 var motion := Vector2.ZERO
 var direction := Vector2.ZERO
@@ -15,7 +19,6 @@ var is_grabbed := false
 
 var last_positions := []
 var velocity := Vector2.ZERO
-
 
 func _ready():
 	
@@ -30,7 +33,12 @@ func _physics_process(delta):
 		move(delta)
 		if OS.window_position.y < 0:
 			motion.y = 0
+
+		if canFlipH and motion.x:
+			sprite.flip_h = motion.x < 0
 		
+		if canFlipH and motion.y:
+			sprite.flip_y = motion.y < 0
 	
 func _input(event):
 	if event is InputEventMouseButton:
