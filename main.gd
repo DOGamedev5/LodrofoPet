@@ -19,6 +19,7 @@ var is_grabbed := false
 
 var last_positions := []
 var velocity := Vector2.ZERO
+var onFloor := false
 
 func _ready():
 	
@@ -27,6 +28,36 @@ func _ready():
 	$StateMachine.init(self)
 
 func _physics_process(delta):
+	if OS.window_position.x < 0:
+		if motion.x < 0:
+			if onFloor:
+				motion.x *= -1
+			else:
+				motion.x *= -bounce
+			
+		window_position_delta.x = 0
+		
+		if not onFloor:
+			motion.y /= 2
+		
+	if OS.window_position.x + OS.window_size.x > OS.get_screen_size().x:
+		if motion.x > 0:
+			if onFloor:
+				motion.x *= -1
+			else:
+				motion.x *= -bounce
+			
+		window_position_delta.x = OS.get_screen_size().x - OS.window_size.x
+		if not onFloor:
+			motion.y /= 2
+	
+	if OS.window_position.y < 0:
+		motion.y = 0
+		window_position_delta.y = 0
+		
+		if not onFloor:
+			motion.x /= 2
+			
 	$StateMachine.processMachine(delta)
 	if not is_grabbed:
 		moveMotion(delta)

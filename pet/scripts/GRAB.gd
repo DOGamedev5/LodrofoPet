@@ -1,7 +1,7 @@
 extends State
 
 func enter(_ls):
-	$"../../AnimationPlayer".play("jump")
+
 	parent.direction = Vector2.ZERO
 
 func physics_process(_delta):
