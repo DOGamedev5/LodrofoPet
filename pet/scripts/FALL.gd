@@ -1,8 +1,10 @@
 extends State
 
+var nextState := ["IDLE", "JUMP", "IDLE", "IDLE", "IDLE", "IDLE", "IDLE", "WALK", "WALK", "RUN"]
 
 func enter(_ls):
-	$"../../AnimationPlayer".play("fall")
+	if not parent.running:
+		$"../../AnimationPlayer".play("fall")
 
 func process_physics(_delta):
 	if OS.window_position.x < 0:
@@ -27,5 +29,6 @@ func process_physics(_delta):
 	
 func process_state():
 	if parent.onFloor():
-		return "IDLE"
+		nextState.shuffle()
+		return nextState[0]
 

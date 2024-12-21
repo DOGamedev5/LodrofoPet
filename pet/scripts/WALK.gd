@@ -2,9 +2,11 @@ extends State
 
 onready var time := $Timer
 
-var nextState := ["IDLE", "JUMP", "IDLE", "IDLE", "JUMP", "WALK"]
+var nextState := ["IDLE", "JUMP", "IDLE", "IDLE", "JUMP", "WALK", "RUN", "RUN", "RUN"]
 
 func enter(_ls):
+	parent.running = false
+	parent.max_speed = parent.normalSpeed
 	$"../../AnimationPlayer".play("walk")
 	parent.direction.x = 1 - ((randi() % 2) * 2)
 

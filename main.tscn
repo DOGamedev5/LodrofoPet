@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://pet/sprites/lodrofoIdle.png" type="Texture" id=1]
 [ext_resource path="res://main.gd" type="Script" id=2]
@@ -11,6 +11,8 @@
 [ext_resource path="res://pet/sprites/lodrofoRun.png" type="Texture" id=9]
 [ext_resource path="res://pet/sprites/lodrofoJump.png" type="Texture" id=10]
 [ext_resource path="res://pet/sprites/lodrofoFall.png" type="Texture" id=11]
+[ext_resource path="res://pet/scripts/RUN.gd" type="Script" id=12]
+[ext_resource path="res://pet/sprites/lodrofoTopSpeed.png" type="Texture" id=13]
 
 [sub_resource type="Animation" id=1]
 length = 0.001
@@ -222,6 +224,60 @@ tracks/3/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
+[sub_resource type="Animation" id=6]
+resource_name = "run"
+length = 0.4
+loop = true
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Icon:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 13 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Icon:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 4 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Icon:vframes")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 2 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Icon:frame")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7 ]
+}
+
 [sub_resource type="Animation" id=3]
 resource_name = "walk"
 length = 0.65
@@ -278,10 +334,13 @@ tracks/3/keys = {
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 2 )
-max_speed = 150
-acceleration = 100
+max_speed = 200
+run_speed = 500
+acceleration = 200
 gravity_force = 400
-jump_force = -800
+jump_force = -500
+friction_force = 4.8
+canFlipH = true
 
 [node name="Icon" type="Sprite" parent="."]
 position = Vector2( 32, 32 )
@@ -322,12 +381,19 @@ script = ExtResource( 8 )
 [node name="Timer" type="Timer" parent="StateMachine/JUMP"]
 one_shot = true
 
+[node name="RUN" type="Node" parent="StateMachine"]
+script = ExtResource( 12 )
+
+[node name="Timer" type="Timer" parent="StateMachine/RUN"]
+one_shot = true
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "idle"
 anims/RESET = SubResource( 1 )
 anims/fall = SubResource( 5 )
 anims/idle = SubResource( 2 )
 anims/jump = SubResource( 4 )
+anims/run = SubResource( 6 )
 anims/walk = SubResource( 3 )
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
