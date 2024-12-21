@@ -30,7 +30,7 @@ func _physics_process(delta):
 		move(delta)
 		if OS.window_position.y < 0:
 			motion.y = 0
-	
+		
 	
 func _input(event):
 	if event is InputEventMouseButton:

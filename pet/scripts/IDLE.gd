@@ -5,6 +5,7 @@ onready var time := $Timer
 var nextState := ["WALK", "JUMP", "WALK", "WALK", "JUMP"]
 
 func enter(_ls):
+	$"../../AnimationPlayer".play("idle")
 	parent.direction.x = 0
 	time.wait_time = rand_range(2, 5)
 	time.start()
