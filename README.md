@@ -5,4 +5,5 @@ both made in Godot 3.6.
 that is a example of what you can do using the [GodoPet](https://github.com/Ciencia-Cafe/GodoPet), also made in Godot 3.6.
 
 ## NOTE:
-for better experience, you should enable to the window to show over the top of ohers windows.
+In linux is recomended to use a Desktop Enviroment that supports transparency
+like XFCE.
