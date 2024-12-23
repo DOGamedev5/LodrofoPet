@@ -1,8 +1,10 @@
 extends Node2D
 
 onready var sprite := $Icon
+onready var normalSpeed := 200
 
 export var max_speed := 120
+export var run_speed := 400
 export var acceleration := 50
 export var have_gravity := true
 export var gravity_force := 200
@@ -20,9 +22,11 @@ var is_grabbed := false
 
 var last_positions := []
 var velocity := Vector2.ZERO
+var running := false
+var onFloor := false
 
 func _ready():
-	
+	normalSpeed = max_speed
 	window_position_delta = OS.window_position
 	randomize()
 	$StateMachine.init(self)
@@ -36,18 +40,20 @@ func _physics_process(delta):
 				motion.x *= -bounce
 			
 		window_position_delta.x = 0
-		
+
 		if not onFloor():
 			motion.y /= 2
 		
 	if OS.window_position.x + OS.window_size.x > OS.get_screen_size().x:
 		if motion.x > 0:
+
 			if onFloor():
 				motion.x *= -1
 			else:
 				motion.x *= -bounce
 			
 		window_position_delta.x = OS.get_screen_size().x - OS.window_size.x
+
 		if not onFloor():
 			motion.y /= 2
 	
@@ -57,7 +63,8 @@ func _physics_process(delta):
 		
 		if not onFloor():
 			motion.x /= 2
-			
+
+	
 	$StateMachine.processMachine(delta)
 	if not is_grabbed:
 		moveMotion(delta)
@@ -68,8 +75,8 @@ func _physics_process(delta):
 		if canFlipH and motion.x:
 			sprite.flip_h = motion.x < 0
 		
-		if canFlipH and motion.y:
-			sprite.flip_y = motion.y < 0
+		if canFlipV and motion.y:
+			sprite.flip_v = motion.y < 0
 	
 func _input(event):
 	if event is InputEventMouseButton:
