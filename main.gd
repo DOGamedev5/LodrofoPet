@@ -15,11 +15,11 @@ export var canFlipV := false
 var motion := Vector2.ZERO
 var direction := Vector2.ZERO
 var window_position_delta := Vector2.ZERO
+var last_window_position : Vector2
 var is_grabbed := false
 
 var last_positions := []
 var velocity := Vector2.ZERO
-var onFloor := false
 
 func _ready():
 	
@@ -28,34 +28,36 @@ func _ready():
 	$StateMachine.init(self)
 
 func _physics_process(delta):
+	print(motion)
+	
 	if OS.window_position.x < 0:
 		if motion.x < 0:
-			if onFloor:
+			if onFloor():
 				motion.x *= -1
 			else:
 				motion.x *= -bounce
 			
 		window_position_delta.x = 0
 		
-		if not onFloor:
+		if not onFloor():
 			motion.y /= 2
 		
 	if OS.window_position.x + OS.window_size.x > OS.get_screen_size().x:
 		if motion.x > 0:
-			if onFloor:
+			if onFloor():
 				motion.x *= -1
 			else:
 				motion.x *= -bounce
 			
 		window_position_delta.x = OS.get_screen_size().x - OS.window_size.x
-		if not onFloor:
+		if not onFloor():
 			motion.y /= 2
 	
 	if OS.window_position.y < 0:
 		motion.y = 0
 		window_position_delta.y = 0
 		
-		if not onFloor:
+		if not onFloor():
 			motion.x /= 2
 			
 	$StateMachine.processMachine(delta)
@@ -106,6 +108,8 @@ func move(delta):
 	if window_position_delta.y > OS.get_screen_size().y - (OS.window_size.y):
 		window_position_delta.y = OS.get_screen_size().y - (OS.window_size.y)
 	
+	last_window_position = OS.window_position
+	
 	OS.window_position = window_position_delta
 
 func moveMotion(delta):
@@ -123,22 +127,20 @@ func moveMotion(delta):
 	if not direction.x and onFloor():
 		var lastDirection := sign(motion.x)
 		motion.x -= friction_force * motion.x * delta
-		if lastDirection != sign(motion.x):
+		if lastDirection != sign(motion.x) or abs(motion.x) < 10*delta:
 			motion.x = 0
 
 
 func gravity(delta):
-	if onFloor():
-		if motion.y > 0:
-			motion.y = 0
-		return
+	if onFloor() and not motion.y < 0:
+		motion.y = gravity_force * 0.2
 	
 	var movement : Vector2 = Vector2.DOWN * gravity_force * delta
 	
 	motion += movement
 
 func onFloor():
-	return OS.window_position.y >= OS.get_screen_size().y - (OS.window_size.y)
+	return OS.window_position.y >= OS.get_screen_size().y - (OS.window_size.y) or OS.window_position.y == last_window_position.y
 
 func _on_Timer_timeout():
 	last_positions.append(OS.window_position)
