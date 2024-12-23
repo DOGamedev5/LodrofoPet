@@ -32,3 +32,5 @@ func process_state():
 		nextState.shuffle()
 		return nextState[0]
 
+func exit():
+	pass
