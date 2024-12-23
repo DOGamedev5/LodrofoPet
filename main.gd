@@ -28,8 +28,6 @@ func _ready():
 	$StateMachine.init(self)
 
 func _physics_process(delta):
-	print(motion)
-	
 	if OS.window_position.x < 0:
 		if motion.x < 0:
 			if onFloor():
