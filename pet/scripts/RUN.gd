@@ -20,6 +20,9 @@ func enter(ls):
 	time.start()
 
 func process_state():
+	if not parent.onFloor():
+		return "FALL"
+		
 	if time.is_stopped():
 		nextState.shuffle()
 		return nextState[0]

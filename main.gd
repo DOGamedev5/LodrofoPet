@@ -17,21 +17,23 @@ export var canFlipV := false
 var motion := Vector2.ZERO
 var direction := Vector2.ZERO
 var window_position_delta := Vector2.ZERO
-var last_window_position : Vector2
+var last_velocity := Vector2.ZERO
 var is_grabbed := false
 
-var last_positions := []
+var last_positions := [Vector2(0, 1), Vector2(0, 2), Vector2(0, 3), Vector2(0, 4)]
 var velocity := Vector2.ZERO
 var running := false
-var onFloor := false
 
 func _ready():
+	OS.set_window_always_on_top(true)
+	
 	normalSpeed = max_speed
 	window_position_delta = OS.window_position
 	randomize()
 	$StateMachine.init(self)
 
 func _physics_process(delta):
+	
 	if OS.window_position.x < 0:
 		if motion.x < 0:
 			if onFloor():
@@ -113,8 +115,6 @@ func move(delta):
 	if window_position_delta.y > OS.get_screen_size().y - (OS.window_size.y):
 		window_position_delta.y = OS.get_screen_size().y - (OS.window_size.y)
 	
-	last_window_position = OS.window_position
-	
 	OS.window_position = window_position_delta
 
 func moveMotion(delta):
@@ -145,10 +145,16 @@ func gravity(delta):
 	motion += movement
 
 func onFloor():
-	return OS.window_position.y >= OS.get_screen_size().y - (OS.window_size.y) or OS.window_position.y == last_window_position.y
+	return OS.window_position.y >= OS.get_screen_size().y - (OS.window_size.y) or ( 
+		last_positions[0] == last_positions[1] and
+		last_positions[0] == last_positions[2] and
+		last_positions[0] == last_positions[3]
+	)
 
 func _on_Timer_timeout():
 	last_positions.append(OS.window_position)
 	if last_positions.size() > 2:
-		last_positions.pop_front()
+		if last_positions.size() > 4: last_positions.pop_front()
+		
+		last_velocity = velocity
 		velocity = last_positions[1] - last_positions[0]

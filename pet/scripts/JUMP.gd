@@ -14,5 +14,6 @@ func enter(_ls):
 	$Timer.start()
 
 func process_state():
+		
 	if parent.motion.y >= 0:
 		return "FALL"

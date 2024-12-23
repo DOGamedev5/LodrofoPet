@@ -1,6 +1,6 @@
 [gd_scene load_steps=20 format=2]
 
-[ext_resource path="res://icon.png" type="Texture" id=1]
+[ext_resource path="res://pet/sprites/lodrofoIdle.png" type="Texture" id=1]
 [ext_resource path="res://main.gd" type="Script" id=2]
 [ext_resource path="res://classes/statemachine/statemachine.gd" type="Script" id=3]
 [ext_resource path="res://pet/scripts/IDLE.gd" type="Script" id=4]
@@ -342,10 +342,12 @@ jump_force = -500
 friction_force = 4.8
 canFlipH = true
 
-
 [node name="Icon" type="Sprite" parent="."]
 position = Vector2( 32, 32 )
+scale = Vector2( 2, 2 )
 texture = ExtResource( 1 )
+hframes = 8
+vframes = 3
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.025
